@@ -56,7 +56,7 @@ theta = zeros(2, 1); % initialize fitting parameters
 
 % Some gradient descent settings
 iterations = 1500;
-alpha = 0.02425;
+alpha = 0.024275;
 
 fprintf('\nTesting the cost function ...\n')
 % compute and display initial cost
@@ -125,17 +125,16 @@ J_vals = J_vals';
 figure;
 surf(theta0_vals, theta1_vals, J_vals)
 hold on;
+plot3(theta_hist(:,1), theta_hist(:,2), J_history*1.10, "y-", 'LineWidth', 2)
 xlabel('\theta_0'); ylabel('\theta_1');
-plot3(theta_hist(:,1), theta_hist(:,2), J_history, 'y-', 'LineWidth', 1) 
-
 hold off;
+
 % Contour plot
 figure;
 % Plot J_vals as 15 contours spaced logarithmically between 0.01 and 100
 contour(theta0_vals, theta1_vals, J_vals, logspace(-2, 3, 20))
 xlabel('\theta_0'); ylabel('\theta_1');
 hold on;
-plot(theta(1), theta(2), 'rx', 'MarkerSize', 5, 'LineWidth', 2);
-plot(theta_hist(1,1), theta_hist(1,2), 'ro', 'MarkerSize', 5, 'LineWidth', 2);
-plot(theta_hist(:,1), theta_hist(:,2), 'r-', 'LineWidth', 1); 
-hold off;
+plot(theta_hist(1,1), theta_hist(1,2), 'ro', 'MarkerSize', 10, 'LineWidth', 2);
+plot(theta_hist(:,1), theta_hist(:,2), "r-", 'LineWidth', 0.75);
+plot(theta(1), theta(2), 'rx', 'MarkerSize', 10, 'LineWidth', 2);
