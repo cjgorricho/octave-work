@@ -20,7 +20,7 @@ for iter = 1:num_iters
     
     theta_hist(iter,:) = theta';
     J_history(iter) = computeCost(X, y, theta);
-    theta = theta - (alpha/m)*sum((X * theta - y) .* X,1)';
+    theta = theta - (alpha/m)*sum((X * theta - y) .* X)';
 
     % ============================================================
 

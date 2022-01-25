@@ -16,7 +16,8 @@ if size(X, 2) <= 3
     % Only need 2 points to define a line, so choose two endpoints
     plot_x = [min(X(:,2))-2,  max(X(:,2))+2];
 
-    % Calculate the decision boundary line
+    % Calculate the decision boundary linef
+
     plot_y = (-1./theta(3)).*(theta(2).*plot_x + theta(1));
 
     % Plot, and adjust axes for better viewing
@@ -41,7 +42,7 @@ else
 
     % Plot z = 0
     % Notice you need to specify the range [0, 0]
-    contour(u, v, z, [0, 0], 'LineWidth', 2)
+    contour(u, v, z, [0, 0], 'LineWidth', 1)
 end
 hold off
 
