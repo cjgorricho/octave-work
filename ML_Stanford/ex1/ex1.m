@@ -56,7 +56,7 @@ theta = zeros(2, 1); % initialize fitting parameters
 
 % Some gradient descent settings
 iterations = 1500;
-alpha = 0.02425;
+alpha = 0.0242;
 
 fprintf('\nTesting the cost function ...\n')
 % compute and display initial cost
