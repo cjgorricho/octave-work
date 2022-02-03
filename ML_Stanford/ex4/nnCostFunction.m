@@ -64,16 +64,41 @@ Theta2_grad = zeros(size(Theta2));
 %
 
 
-for i = 1:m
+for t = 1:m   % Loop sobre todas las muestras de X
   
-  h1 = sigmoid(Theta1 * X(i,:)');
-  h2 = sigmoid(Theta2 * [1; h1]);
+  % Step 1 per 2.3 Backpropagation in ex4.pdf 
+  a1 = X(t,:)';
+  z2 = Theta1 * a1;
+  a2 = sigmoid(z2);
+  a2 = [1; a2];
+  z3 = Theta2 * a2;
+  a3 = sigmoid(z3);
   
-  y_vec = (y(i)==1:num_labels); % IMPORTANTE: debe ir hasta el numero de K
+  % h1 = sigmoid(Theta1 * X(i,:)'); % version corta
+  % h2 = sigmoid(Theta2 * [1; h1]); % version corta
+
+  y_vec = (y(t)==1:num_labels); % IMPORTANTE: debe ir hasta el numero de labels o clases K
   
-  J_iter = sum(-y_vec'.*log(h2)-(1-y_vec').*log(1-h2));
-  
+  J_iter = sum(-y_vec'.*log(a3)-(1-y_vec').*log(1-a3));
   J = J + J_iter;
+  
+  % Step 2 per 2.3 Backpropagation in ex4.pdf - delta for last layer
+  
+  d3 = a3 - y_vec'; %d in last layer
+  
+  % Step 3 per 2.3 Backpropagation in ex4.pdf - delta for hidden layer
+  
+  d2 = (Theta2(:,2:end)' * d3) .* sigmoidGradient(z2); % Remove first elemnt
+  
+  % Step 4 per 2.3 Backpropagation in ex4.pdf - delta for hidden layer
+  
+  D2 = d3 * a2'; % Estas fórmulas son las mismas en versón iterativa o vectorizada
+  D1 = d2 * a1'; % Estas fórmulas son las mismas en versón iterativa o vectorizada
+  
+  % Step 5 per 2.3 Backpropagation in ex4.pdf - delta for hidden layer
+  
+  Theta1_grad = (1/m) * D1;
+  Theta2_grad = (1/m) * D2;
 
 end
 
