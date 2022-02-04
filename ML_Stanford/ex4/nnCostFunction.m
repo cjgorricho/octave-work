@@ -97,17 +97,17 @@ for t = 1:m   % Loop sobre todas las muestras de X
   D2 = D2 + d3 * a2'; % Estas fórmulas son las mismas en versón iterativa o vectorizada
   D1 = D1 + d2 * a1'; % Estas fórmulas son las mismas en versón iterativa o vectorizada
   
-  % Step 5 per 2.3 Backpropagation in ex4.pdf - delta for hidden layer
-  
-  
+   
 end
 
 J = J /m;
 J = J + (lambda/(2*m))*(sum(sum(Theta1(:,2:end).^2)) ... 
       + sum(sum(Theta2(:,2:end).^2)));
 
-Theta1_grad = (1/m) * D1;
-Theta2_grad = (1/m) * D2;
+% Step 5 per 2.3 Backpropagation in ex4.pdf - delta for hidden layer
+      
+Theta1_grad = (1/m) * D1 + (lambda/m) * [zeros(size(Theta1,1),1) Theta1(:,2:end)];
+Theta2_grad = (1/m) * D2 + (lambda/m) * [zeros(size(Theta2,1),1) Theta2(:,2:end)];
 
       
       
