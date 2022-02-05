@@ -31,6 +31,9 @@ y_vec = (y==1:num_labels); % IMPORTANTE: debe ir hasta el numero de K
 J = 0;
 Theta1_grad = zeros(size(Theta1));
 Theta2_grad = zeros(size(Theta2));
+D1 = zeros(size(Theta1));
+D2 = zeros(size(Theta2));
+
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: You should complete the code by working through the
@@ -64,14 +67,59 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
-h1 = sigmoid(X * Theta1');
-h2 = sigmoid([ones(m,1) h1] * Theta2');
+y_matrix = (y==1:num_labels); % by Carlos Gorricho!
+
+% Step 1 per ex4 tutorial in 
+% https://www.coursera.org/learn/machine-learning/discussions/forums/threads/threads/a8Kce_WxEeS16yIACyoj1Q
+
+a1 = X;
+z2 = a1 * Theta1';
+a2 = sigmoid(z2);
+a2 = [ones(m,1) a2];
+z3 = a2 * Theta2';
+a3 = sigmoid(z3);
+
+% Cost calculation with Regularization
   
-J = (1/m)*sum(sum(-y_vec.*log(h2)-(1-y_vec).*log(1-h2))) ...
+J = (1/m)*sum(sum(-y_matrix.*log(a3)-(1-y_matrix).*log(1-a3))) ...
      + (lambda/(2*m))*(sum(sum(Theta1(:,2:end).^2)) ...
      + sum(sum(Theta2(:,2:end).^2)));
 
-% -------------------------------------------------------------
+     
+% Step 2 per ex4 tutorial in 
+% https://www.coursera.org/learn/machine-learning/discussions/forums/threads/threads/a8Kce_WxEeS16yIACyoj1Q
+   
+d3 = a3 - y_matrix; % little delta (d) in last layer
+
+
+% Step 3 and 4 per ex4 tutorial in 
+% https://www.coursera.org/learn/machine-learning/discussions/forums/threads/threads/a8Kce_WxEeS16yIACyoj1Q
+
+d2 = (d3 * Theta2(:,2:end)) .* sigmoidGradient(z2); % Remove first elemnt
+
+
+% Step 5 per ex4 tutorial in 
+% https://www.coursera.org/learn/machine-learning/discussions/forums/threads/threads/a8Kce_WxEeS16yIACyoj1Q
+
+D1 = d2' * a1;
+
+
+% Step 6 per ex4 tutorial in 
+% https://www.coursera.org/learn/machine-learning/discussions/forums/threads/threads/a8Kce_WxEeS16yIACyoj1Q
+
+D2 = d3' * a2;
+
+
+% Step 7, 8 and 9 per ex4 tutorial in 
+% https://www.coursera.org/learn/machine-learning/discussions/forums/threads/threads/a8Kce_WxEeS16yIACyoj1Q
+
+Theta1_grad = (1/m) * D1 ... 
+  + (lambda/m) * [zeros(size(Theta1,1),1) Theta1(:,2:end)]; % The first column of Theta1 is replaced with zeros
+
+Theta2_grad = (1/m) * D2 ...
+  + (lambda/m) * [zeros(size(Theta2,1),1) Theta2(:,2:end)]; % The first column of Theta2 is replaced with zeros
+
+
 
 % =========================================================================
 

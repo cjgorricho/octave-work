@@ -9,7 +9,7 @@
 %
 %     sigmoidGradient.m
 %     randInitializeWeights.m
-%     nnCostFunction.m
+%     nnCostFunction_vec.m
 %
 %  For this exercise, you will not need to change any code in this file,
 %  or any other files other than those mentioned above.
@@ -60,7 +60,7 @@ nn_params = [Theta1(:) ; Theta2(:)];
 %% ================ Part 3: Compute Cost (Feedforward) ================
 %  To the neural network, you should first start by implementing the
 %  feedforward part of the neural network that returns the cost only. You
-%  should complete the code in nnCostFunction.m to return cost. After
+%  should complete the code in nnCostFunction_vec.m to return cost. After
 %  implementing the feedforward to compute the cost, you can verify that
 %  your implementation is correct by verifying that you get the same cost
 %  as us for the fixed debugging parameters.
@@ -74,7 +74,7 @@ fprintf('\nFeedforward Using Neural Network ...\n')
 % Weight regularization parameter (we set this to 0 here).
 lambda = 0;
 
-J = nnCostFunction(nn_params, input_layer_size, hidden_layer_size, ...
+J = nnCostFunction_vec(nn_params, input_layer_size, hidden_layer_size, ...
                    num_labels, X, y, lambda);
 
 fprintf(['Cost at parameters (loaded from ex4weights): %f '...
@@ -93,7 +93,7 @@ fprintf('\nChecking Cost Function (w/ Regularization) ... \n')
 % Weight regularization parameter (we set this to 1 here).
 lambda = 1;
 
-J = nnCostFunction(nn_params, input_layer_size, hidden_layer_size, ...
+J = nnCostFunction_vec(nn_params, input_layer_size, hidden_layer_size, ...
                    num_labels, X, y, lambda);
 
 fprintf(['Cost at parameters (loaded from ex4weights): %f '...
@@ -138,13 +138,13 @@ initial_nn_params = [initial_Theta1(:) ; initial_Theta2(:)];
 %% =============== Part 7: Implement Backpropagation ===============
 %  Once your cost matches up with ours, you should proceed to implement the
 %  backpropagation algorithm for the neural network. You should add to the
-%  code you've written in nnCostFunction.m to return the partial
+%  code you've written in nnCostFunction_vec.m to return the partial
 %  derivatives of the parameters.
 %
 fprintf('\nChecking Backpropagation... \n');
 
-%  Check gradients by running checkNNGradients
-checkNNGradients;
+%  Check gradients by running checkNNGradients_vec
+checkNNGradients_vec;
 
 fprintf('\nProgram paused. Press enter to continue.\n');
 pause;
@@ -157,12 +157,12 @@ pause;
 
 fprintf('\nChecking Backpropagation (w/ Regularization) ... \n')
 
-%  Check gradients by running checkNNGradients
+%  Check gradients by running checkNNGradients_vec
 lambda = 3;
-checkNNGradients(lambda);
+checkNNGradients_vec(lambda);
 
 % Also output the costFunction debugging values
-debug_J  = nnCostFunction(nn_params, input_layer_size, ...
+debug_J  = nnCostFunction_vec(nn_params, input_layer_size, ...
                           hidden_layer_size, num_labels, X, y, lambda);
 
 fprintf(['\n\nCost at (fixed) debugging parameters (w/ lambda = %f): %f ' ...
@@ -183,13 +183,13 @@ fprintf('\nTraining Neural Network... \n')
 
 %  After you have completed the assignment, change the MaxIter to a larger
 %  value to see how more training helps.
-options = optimset('MaxIter', 50);
+options = optimset('MaxIter', 100);
 
 %  You should also try different values of lambda
 lambda = 1;
 
 % Create "short hand" for the cost function to be minimized
-costFunction = @(p) nnCostFunction(p, ...
+costFunction = @(p) nnCostFunction_vec(p, ...
                                    input_layer_size, ...
                                    hidden_layer_size, ...
                                    num_labels, X, y, lambda);
@@ -202,6 +202,7 @@ tic();
 [nn_params, cost] = fmincg(costFunction, initial_nn_params, options);
 
 time_elapsed = toc();
+
 
 % Obtain Theta1 and Theta2 back from nn_params
 Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), ...

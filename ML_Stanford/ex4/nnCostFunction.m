@@ -86,7 +86,7 @@ for t = 1:m   % Loop sobre todas las muestras de X
   
   % Step 2 per 2.3 Backpropagation in ex4.pdf - delta for last layer
   
-  d3 = a3 - y_vec'; %d in last layer
+  d3 = a3 - y_vec'; % little delta (d) in last layer
   
   % Step 3 per 2.3 Backpropagation in ex4.pdf - delta for hidden layer
   
