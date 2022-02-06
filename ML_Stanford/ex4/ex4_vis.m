@@ -81,8 +81,8 @@ fprintf('\nTraining Neural Network... \n')
 lambda = 3;
 
 lambda_div = 3;
-iter_add = 20;
-num_iters = 100;
+iter_add = 0;
+num_iters = 200;
 max_loops = 5;
 
 lambda_hist = zeros(1, max_loops + 1);
@@ -156,13 +156,14 @@ xlabel('Number of iterations');
 ylabel('Cost J');
 hold on;
 
+plot(1:size(cost_all,2), cost_all);
+
 for i = 1:max_loops + 1
   
     st_text = sprintf('Lambda: %.3f | Iter: %d | J min: %.3f', ... 
       lambda_hist(i), iters_hist(i), min(cost_all(i, :)));
     legend_text = [legend_text; st_text];
-    plot(1:numel(cost_all(i, :)), cost_all(i, :), colors(i), 'LineWidth', 1);
-
+    
 end
 
 legend(legend_text, 'fontsize', 10);
@@ -174,13 +175,15 @@ ylabel('Accuracy');
 hold on;
 legend_text = [];
 
+
+
 for i = 1:max_loops + 1
   
     st_text = sprintf('Lambda: %.3f | Iter: %d | Time: %.1f sec | Acc: %.2f%%', ... 
       lambda_hist(i), iters_hist(i), time_hist(i), accu_hist(i));
     legend_text = [legend_text; st_text];
-    plot(time_hist(i), accu_hist(i), 'marker', 'x', 'linewidth', 2, colors(i));
-
+    plot(time_hist(i), accu_hist(i), 'marker', 'x', 'linewidth', 2, colors);
+    
 end
 
 legend(legend_text, 'fontsize', 10, 'location', 'southeast');
