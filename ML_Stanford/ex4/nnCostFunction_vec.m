@@ -25,7 +25,7 @@ Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):en
 % Setup some useful variables
 m = size(X, 1);
 X = [ones(m, 1) X];
-y_vec = (y==1:num_labels); % IMPORTANTE: debe ir hasta el numero de K  
+y_matrix = (y==1:num_labels); % IMPORTANTE: debe ir hasta el numero de K  
   
 % You need to return the following variables correctly 
 J = 0;
@@ -66,8 +66,6 @@ D2 = zeros(size(Theta2));
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
 %
-
-y_matrix = (y==1:num_labels); % by Carlos Gorricho!
 
 % Step 1 per ex4 tutorial in 
 % https://www.coursera.org/learn/machine-learning/discussions/forums/threads/threads/a8Kce_WxEeS16yIACyoj1Q
