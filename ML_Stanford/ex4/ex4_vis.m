@@ -156,13 +156,12 @@ xlabel('Number of iterations');
 ylabel('Cost J');
 hold on;
 
-plot(1:size(cost_all,2), cost_all);
-
 for i = 1:max_loops + 1
   
     st_text = sprintf('Lambda: %.3f | Iter: %d | J min: %.3f', ... 
       lambda_hist(i), iters_hist(i), min(cost_all(i, :)));
     legend_text = [legend_text; st_text];
+    plot(1:numel(cost_all(i,:)), cost_all(i,:), colors(i));
     
 end
 
@@ -182,7 +181,7 @@ for i = 1:max_loops + 1
     st_text = sprintf('Lambda: %.3f | Iter: %d | Time: %.1f sec | Acc: %.2f%%', ... 
       lambda_hist(i), iters_hist(i), time_hist(i), accu_hist(i));
     legend_text = [legend_text; st_text];
-    plot(time_hist(i), accu_hist(i), 'marker', 'x', 'linewidth', 2, colors);
+    plot(time_hist(i), accu_hist(i), 'marker', 'x', 'linewidth', 2, colors(i));
     
 end
 
