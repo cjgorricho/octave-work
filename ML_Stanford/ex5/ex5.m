@@ -1,4 +1,4 @@
-%% Machine Learning Online Class
+`wd%% Machine Learning Online Class
 %  Exercise 5 | Regularized Linear Regression and Bias-Variance
 %
 %  Instructions
@@ -35,7 +35,7 @@ load ('ex5data1.mat');
 m = size(X, 1);
 
 % Plot training data
-plot(X, y, 'rx', 'MarkerSize', 10, 'LineWidth', 1.5);
+plot(X, y, 'rx', 'MarkerSize', 5, 'LineWidth', 1);
 xlabel('Change in water level (x)');
 ylabel('Water flowing out of the dam (y)');
 
@@ -90,7 +90,7 @@ plot(X, y, 'rx', 'MarkerSize', 10, 'LineWidth', 1.5);
 xlabel('Change in water level (x)');
 ylabel('Water flowing out of the dam (y)');
 hold on;
-plot(X, [ones(m, 1) X]*theta, '--', 'LineWidth', 2)
+plot(X, [ones(m, 1) X]*theta, '-', 'LineWidth', 1)
 hold off;
 
 fprintf('Program paused. Press enter to continue.\n');
