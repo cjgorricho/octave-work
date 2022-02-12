@@ -38,7 +38,12 @@ load ('ex5data1.mat');
 m = size(X, 1);
 
 % Plot training data
-plot(X, y, 'rx', 'MarkerSize', 10, 'LineWidth', 1.5);
+Xtrain = [X; NaN(size(Xtest)-size(X),1)];
+ytrain = [y; NaN(size(ytest)-size(y),1)];
+Xplot = [Xtrain Xval Xtest];
+yplot = [ytrain yval ytest];
+
+plot(Xplot, yplot, 'x', 'MarkerSize', 5, 'LineWidth', 1);
 xlabel('Change in water level (x)');
 ylabel('Water flowing out of the dam (y)');
 
@@ -89,11 +94,11 @@ lambda = 0;
 [theta] = trainLinearReg([ones(m, 1) X], y, lambda);
 
 %  Plot fit over the data
-plot(X, y, 'rx', 'MarkerSize', 10, 'LineWidth', 1.5);
+plot(X, y, 'rx', 'MarkerSize', 5, 'LineWidth', 1);
 xlabel('Change in water level (x)');
 ylabel('Water flowing out of the dam (y)');
 hold on;
-plot(X, [ones(m, 1) X]*theta, '--', 'LineWidth', 2)
+plot(X, [ones(m, 1) X]*theta, '-', 'LineWidth', 2)
 hold off;
 
 fprintf('Program paused. Press enter to continue.\n');
@@ -108,21 +113,22 @@ pause;
 %
 
 lambda = 0;
-[error_train, error_val] = ...
-    learningCurve([ones(m, 1) X], y, ...
+[error_train, error_val, error_test] = ...
+    learningCurve_cag([ones(m, 1) X], y, ...
                   [ones(size(Xval, 1), 1) Xval], yval, ...
+                  [ones(size(Xtest, 1), 1) Xtest], ytest, ...
                   lambda);
 
-plot(1:m, error_train, 1:m, error_val);
+plot(1:m, error_train, 1:m, error_val, 1:m, error_test);
 title('Learning curve for linear regression')
-legend('Train', 'Cross Validation')
+legend('Train', 'Cross Validation', 'Test')
 xlabel('Number of training examples')
 ylabel('Error')
 axis([0 13 0 150])
 
-fprintf('# Training Examples\tTrain Error\tCross Validation Error\n');
+fprintf('# Training Examples\tTrain Error\tCross Val Error\t\tCross Val Error\n');
 for i = 1:m
-    fprintf('  \t%d\t\t%f\t%f\n', i, error_train(i), error_val(i));
+    fprintf('  \t%d\t\t%f\t%f\t\t%f\n', i, error_train(i), error_val(i), error_test(i));
 end
 
 fprintf('Program paused. Press enter to continue.\n');
