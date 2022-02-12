@@ -46,6 +46,7 @@ yplot = [ytrain yval ytest];
 plot(Xplot, yplot, 'x', 'MarkerSize', 5, 'LineWidth', 1);
 xlabel('Change in water level (x)');
 ylabel('Water flowing out of the dam (y)');
+legend('Train', 'Cross Validation', 'Test', 'location', 'NorthWest', 'fontsize', 12);
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
