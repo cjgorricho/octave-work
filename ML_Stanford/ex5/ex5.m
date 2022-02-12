@@ -95,12 +95,15 @@ lambda = 0;
 [theta] = trainLinearReg([ones(m, 1) X], y, lambda);
 
 %  Plot fit over the data
+figure;
 plot(X, y, 'rx', 'MarkerSize', 5, 'LineWidth', 1);
 xlabel('Change in water level (x)');
 ylabel('Water flowing out of the dam (y)');
 hold on;
-plot(X, [ones(m, 1) X]*theta, '-', 'LineWidth', 2)
+plot(X, [ones(m, 1) X]*theta, '-', 'LineWidth', 1)
 hold off;
+legend('Train', 'Prediction', 'location', 'NorthWest', 'fontsize', 12);
+
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
@@ -120,9 +123,10 @@ lambda = 0;
                   [ones(size(Xtest, 1), 1) Xtest], ytest, ...
                   lambda);
 
+figure;
 plot(1:m, error_train, 1:m, error_val, 1:m, error_test);
 title('Learning curve for linear regression')
-legend('Train', 'Cross Validation', 'Test')
+legend('Train', 'Cross Validation', 'Test', 'fontsize', 12)
 xlabel('Number of training examples')
 ylabel('Error')
 axis([0 13 0 150])
