@@ -177,7 +177,7 @@ pause;
 %  lambda to see how the fit and learning curve change.
 %
 
-lambda = 3;
+lambda = 3.25;
 [theta] = trainLinearReg(X_poly, y, lambda);
 
 % Plot training data and fit
@@ -214,12 +214,12 @@ pause;
 %  "best" lambda value.
 %
 
-[lambda_vec, error_train, error_val] = ...
-    validationCurve(X_poly, y, X_poly_val, yval);
+[lambda_vec, error_train, error_val, total_error] = ...
+    validationCurve_cag(X_poly, y, X_poly_val, yval);
 
 close all;
-plot(lambda_vec, error_train, lambda_vec, error_val);
-legend('Train', 'Cross Validation');
+plot(lambda_vec, error_train, lambda_vec, error_val, lambda_vec, total_error);
+legend('Train', 'Cross Validation', 'Total', 'fontsize', 12);
 xlabel('lambda');
 ylabel('Error');
 
