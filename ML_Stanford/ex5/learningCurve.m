@@ -20,7 +20,6 @@ m = size(X, 1);
 % You need to return these values correctly
 error_train = zeros(m, 1);
 error_val   = zeros(m, 1);
-%theta = zeros(size(X,2), 1);
 
 
 % ====================== YOUR CODE HERE ======================
@@ -56,7 +55,7 @@ error_val   = zeros(m, 1);
 % ---------------------- Sample Solution ----------------------
 
 for i = 1:m
-    theta = zeros(size(X,2), 1);    %Reset theta in every loop
+    
     [theta] = trainLinearReg(X(1:i, :), y(1:i), lambda);   %train theta
     
     error_train(i) = linearRegCostFunction(X(1:i, :), y(1:i), theta, 0);

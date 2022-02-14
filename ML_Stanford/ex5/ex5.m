@@ -240,42 +240,49 @@ pause;
 %
 
 close all;
-lambda = 3;
-iterations = 50;
+
+% Selected values of lambda (you should not change this)
+%lambda_vec = [0 0.001 0.003 0.01 0.03 0.1 0.3 1 3 10]';
+lambda_vec = [2 2.2 2.4 2.6 2.8 3.0 3.2 3.4 3.6 3.8]';
+
+iterations = 25;
 error_train_rand = zeros(size(X_poly, 1), iterations);
 error_val_rand = zeros(size(X_poly, 1), iterations);
 error_test_rand = zeros(size(X_poly, 1), iterations);
+plot_rows = 2;
+plot_cols = length(lambda_vec) / plot_rows;
 
-for i = 1:iterations
-  
-  fprintf('\nIteration: %d\n', i);  
-  [error_train_rand(:, i) error_val_rand(:, i) error_test_rand(:, i)] = ...
-      learningCurve_cag_rand(X_poly, y, ...
-      X_poly_val, yval, ... 
-      X_poly_test, ytest,lambda);
-  
+
+for j = 1:length(lambda_vec)
+
+    lambda = lambda_vec(j);
+    fprintf('\nLambda: %.3f\n', lambda);
+    
+    for i = 1:iterations
+      
+      fprintf('\nIteration: %d\n', i);  
+      [error_train_rand(:, i) error_val_rand(:, i) error_test_rand(:, i)] = ...
+          learningCurve_cag_rand(X_poly, y, ...
+          X_poly_val, yval, ... 
+          X_poly_test, ytest,lambda);
+      
+    end
+
+    error_train = mean(error_train_rand,2);
+    error_val = mean(error_val_rand,2);
+    error_test = mean(error_test_rand,2);
+    error_plot = [error_train error_val error_test];
+    
+    subplot(plot_rows, plot_cols, j);
+      plot(1:m, error_plot);
+      title(sprintf('Polynomial Regression\nLearning Curve\n(lambda = %.3f)', lambda));
+      xlabel('Number of training examples');
+      ylabel('Error');
+      legend('Train', 'Cross Validation', 'Test', 'location', 'northeast');
+      axis([0 13 0 150]);
+
 end
 
-error_train = mean(error_train_rand,2);
-error_val = mean(error_val_rand,2);
-error_test = mean(error_test_rand,2);
-error_plot = [error_train error_val error_test];
-
-figure;
-
-plot(1:m, error_plot);
-
-title(sprintf('\n\nPolynomial Regression Learning Curve (lambda = %.3f)', lambda));
-xlabel('Number of training examples')
-ylabel('Error')
-axis([0 13 0 150])
-legend('Train', 'Cross Validation', 'Test', 'fontsize', 12)
-
-fprintf('Polynomial Regression (lambda = %f)\n\n', lambda);
-fprintf('# Training Examples\tTrain Error\tCross Val Error\t\tTest Error\n');
-for i = 1:m
-    fprintf('  \t%d\t\t%f\t%f\t\t%f\n', i, error_train(i), error_val(i), error_test(i));
-end
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
