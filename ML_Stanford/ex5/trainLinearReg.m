@@ -7,7 +7,9 @@ function [theta] = trainLinearReg(X, y, lambda)
 %
 
 % Initialize Theta
-initial_theta = zeros(size(X, 2), 1); 
+initial_theta = rand(size(X, 2), 1); 
+%initial_theta = zeros(size(X, 2), 1); 
+%initial_theta = ones(size(X, 2), 1); 
 
 % Create "short hand" for the cost function to be minimized
 costFunction = @(t) linearRegCostFunction(X, y, t, lambda);

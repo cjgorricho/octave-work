@@ -214,19 +214,67 @@ pause;
 %  "best" lambda value.
 %
 
-[lambda_vec, error_train, error_val, total_error] = ...
-    validationCurve_cag(X_poly, y, X_poly_val, yval);
+[lambda_vec, error_train, error_val, total_error, error_test] = ...
+    validationCurve_cag(X_poly, y, X_poly_val, yval, X_poly_test, ytest);
 
 close all;
-plot(lambda_vec, error_train, lambda_vec, error_val, lambda_vec, total_error);
-legend('Train', 'Cross Validation', 'Total', 'fontsize', 12);
+plot(lambda_vec, error_train, lambda_vec, error_val, lambda_vec, error_test, lambda_vec, total_error);
+legend('Train', 'Cross Validation', 'Test', 'Total Train + Val', 'fontsize', 12);
 xlabel('lambda');
 ylabel('Error');
 
-fprintf('lambda\t\tTrain Error\tValidation Error\n');
+fprintf('lambda\t\tTrain Error\tCross Val Error\t\tTest Error\n');
 for i = 1:length(lambda_vec)
-	fprintf(' %f\t%f\t%f\n', ...
-            lambda_vec(i), error_train(i), error_val(i));
+	fprintf(' %f\t%f\t%f\t\t%f\n', ...
+            lambda_vec(i), error_train(i), error_val(i), error_test(i));
+end
+
+fprintf('Program paused. Press enter to continue.\n');
+pause;
+
+
+%% =========== Part 9: Plotting Learning Curves with randomly selected examples =============
+%  Per 3.5 Optional exercise in ex5.pdf. Select i random examples from Training and Validation sets
+%  Learn theta for each set. Calculate errors for Train and Validations sets 
+%  Repeat 50 times and average error 
+%
+
+close all;
+lambda = 3;
+iterations = 50;
+error_train_rand = zeros(size(X_poly, 1), iterations);
+error_val_rand = zeros(size(X_poly, 1), iterations);
+error_test_rand = zeros(size(X_poly, 1), iterations);
+
+for i = 1:iterations
+  
+  fprintf('\nIteration: %d\n', i);  
+  [error_train_rand(:, i) error_val_rand(:, i) error_test_rand(:, i)] = ...
+      learningCurve_cag_rand(X_poly, y, ...
+      X_poly_val, yval, ... 
+      X_poly_test, ytest,lambda);
+  
+end
+
+error_train = mean(error_train_rand,2);
+error_val = mean(error_val_rand,2);
+error_test = mean(error_test_rand,2);
+error_plot = [error_train error_val error_test];
+
+figure;
+
+plot(1:m, error_plot);
+
+title(sprintf('\n\nPolynomial Regression Learning Curve (lambda = %.3f)', lambda));
+xlabel('Number of training examples')
+ylabel('Error')
+axis([0 13 0 150])
+legend('Train', 'Cross Validation', 'Test', 'fontsize', 12)
+
+fprintf('Polynomial Regression (lambda = %f)\n\n', lambda);
+fprintf('# Training Examples\tTrain Error\tCross Val Error\t\tTest Error\n');
+for i = 1:m
+    fprintf('  \t%d\t\t%f\t%f\t\t%f\n', i, error_train(i), error_val(i), error_test(i));
 end
 
 fprintf('Program paused. Press enter to continue.\n');
