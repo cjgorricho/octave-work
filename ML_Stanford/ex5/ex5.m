@@ -241,9 +241,9 @@ pause;
 
 close all;
 
-% Selected values of lambda (you should not change this)
-lambda_vec = [0 0.001 0.003 0.01 0.03 0.1 0.3 1 3 10]';
-%lambda_vec = [2 2.2 2.4 2.6 2.8 3.0 3.2 3.4 3.6 3.8]';
+% Selected values of lambda 
+%lambda_vec = [0 0.001 0.003 0.01 0.03 0.1 0.3 1 3 10]';
+lambda_vec = [2 2.2 2.4 2.6 2.8 3.0 3.2 3.4 3.6 3.8]';
 
 iterations = 25;
 error_train_rand = zeros(size(X_poly, 1), iterations);
