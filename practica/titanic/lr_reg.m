@@ -32,22 +32,33 @@ clear; close all; clc
 %  Col 7:
 %  Col 8: Boarding Port (C: 1, S: 2, Q:3)
 
+% Load data
 data = load('train_val.csv');
-X = data(:, [3, 4, 5, 6]); y = data(:, 2);
+X = data(:, [3, 4, 5]); y = data(:, 2);
+m = size(X,1);
+X = [ones(m,1) X];
+
+
+% Create random training and validation examples
+rand_ind = randperm(m);
+train_perc = 0.7;
+train_ind = round(train_perc * m);
+X_train = X(rand_ind(1:train_ind), :); y_train = y(rand_ind(1:train_ind));
+X_val = X(rand_ind(train_ind+1:end), :); y_val = y(rand_ind(train_ind+1:end));
 
 % Initialize fitting parameters
 initial_theta = zeros(size(X, 2), 1);
 
 % Set regularization parameter lambda to 1 (you should vary this)
-lambda = 0.1;
+lambda = 3.5;
 
 % Set Options
 options = optimset('GradObj', 'on', 'MaxIter', 400);
 
 % Optimize
-[theta, J, exit_flag] = ...
-	fminunc(@(t)(costFunctionReg(t, X, y, lambda)), initial_theta, options);
+[theta, J, exit_flag, output, grad] = ...
+	fminunc(@(t)(costFunctionReg(t, X_train, y_train, lambda)), initial_theta, options);
 
-p = predict(theta, X);
+p = predict(theta, X_val);
 
-fprintf('Train Accuracy: %f\n', mean(double(p == y)) * 100);
+fprintf('Train Accuracy: %f\n', mean(double(p == y_val)) * 100);
