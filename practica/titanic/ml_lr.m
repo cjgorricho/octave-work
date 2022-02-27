@@ -32,14 +32,20 @@ clear; close all; clc
 %  Col 7:
 %  Col 8: Boarding Port (C: 1, S: 2, Q:3)
 
-% Load data
+% Load data - Passenger Class and Sex
 data = load('train_val.csv');
-X = data(:, [3, 4, 5]); y = data(:, 2);
+X = data(:, [3, 4]); y = data(:, 2);
+
+% Load data - Passenger Age and add 2 polinomials
+X_age = data(:, 5);
+X_age_poly = polyFeatures(X_age, 2);
+
+% Integreate data
 m = size(X,1);
-X = [ones(m,1) X];
+X = [ones(m,1), X, X_age_poly];
 
 
-% Create random training and validation examples
+% Create random training and validation sets
 rand_ind = randperm(m);
 train_perc = 0.7;
 train_ind = round(train_perc * m);
@@ -47,17 +53,22 @@ X_train = X(rand_ind(1:train_ind), :); y_train = y(rand_ind(1:train_ind));
 X_val = X(rand_ind(train_ind+1:end), :); y_val = y(rand_ind(train_ind+1:end));
 
 % Initialize fitting parameters
-initial_theta = zeros(size(X, 2), 1);
+%initial_theta = rand(size(X, 2), 1); 
+initial_theta = zeros(size(X, 2), 1); 
+%initial_theta = ones(size(X, 2), 1); 
 
-% Set regularization parameter lambda to 1 (you should vary this)
-lambda = 3.5;
+% Set regularization parameter lambda
+lambda = 2.5;
 
 % Set Options
-options = optimset('GradObj', 'on', 'MaxIter', 400);
+options = optimset('MaxIter', 400, 'GradObj', 'on');
 
 % Optimize
+
+costFunction = @(t)(costFunctionReg(t, X_train, y_train, lambda));
+
 [theta, J, exit_flag, output, grad] = ...
-	fminunc(@(t)(costFunctionReg(initial_theta, X_train, y_train, lambda)), options);
+	fminunc(costFunction, initial_theta, options);
 
 p = predict(theta, X_val);
 
