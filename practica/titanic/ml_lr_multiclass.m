@@ -24,24 +24,36 @@ clear; close all; clc
 
 pkg load io;
 
-%% Load Data
-%  The original file is transformed to obtain the following file structure
-%  Col 1: passenger consecutive ID, which is not used in the model
-%  Col 2: label (y)
-%  Col 3: Passenger Class (PClass: 1, 2, 3)
-%  Col 4: Sex (male: 1, female: 2)
-%  Col 5: Age; where data was missing I put the average for the class, sex and 
-%         survived/not-survived. This should reduce the drag
-%  Col 6: SibSp - # of siblings or spouse 
-%  Col 7: Parch - # of parents or children
-%  Col 8: Boarding Port (C: 1, S: 2, Q:3)
+%% Setup the parameters you will use for this part of the exercise
+num_labels = 6;           % 6 labels corresponding to combinations of Class and Sex
 
-% Load data - Passenger Class (Col3), Sex (Col4), or both
-data = load('train_val.csv');
-X = data(:, [3, 4, 6, 7]); y = data(:, 2);
+%% Load Data
+%  xlsread will be used to load data directly from Excel
+%  Col  1: Passenger ID (not used)
+%  Col  2: original label y (survived: 1, did not survive:0)
+%  Col  3: Passenger Class (PClass: 1, 2, 3)
+%  Col  4: Name (not used)
+%  Col  5: Sex_txt (male, female)
+%  Col  6: Sex_num (male: 1, female: 2) 
+%  Col  7: Age (not used because it has missing values)
+%  Col  8: Age_adj; for training purposes average was calculated by survived/class/sex
+%  Col  9: SibSp - # of siblings or spouse 
+%  Col 10: Parch - # of parents or children
+%  Col 11: Ticket (not used)
+%  Col 12: Fare (not used)
+%  Col 13: Cabin (not used)
+%  Col 14: Embarked_txt (C, S, Q)
+%  Col 15: Embarked_num (C:1, S: 2, Q:3)
+%  Col 16: Class_sex; combination of Class and Sex. These are the classes
+%  col 17 - 22: y vectors for each class in one-vs-all algorythm
+
+% Load data - combination of Class, Sex, SibSp, Parch, Embarked
+data = xlsread('train.xlsx', 'train'); % Read file and worksheet
+X = data(4:end, [3, 6, 9, 10, 15]); % Load data according to dictionary above except 
+y = data(4:end, 17:22);
 
 % Load data - Passenger Age and add npols polinomials. If commented (%) not used
-X_age = data(:, 5);
+X_age = data(4:end, 8);
 npols = 2;
 X_age_poly = polyFeatures(X_age, npols);
 
@@ -57,9 +69,9 @@ train_ind = round(train_perc * m);
 X_train = X(rand_ind(1:train_ind), :); y_train = y(rand_ind(1:train_ind));
 X_val = X(rand_ind(train_ind+1:end), :); y_val = y(rand_ind(train_ind+1:end));
 
-% Initialize fitting parameters
+% Initialize fitting parameters (DONE IN ONEVSALL FUNCTION)
 %initial_theta = rand(size(X, 2), 1); 
-initial_theta = zeros(size(X, 2), 1); 
+%initial_theta = zeros(size(X, 2), 1); 
 %initial_theta = ones(size(X, 2), 1); 
 
 % Set regularization parameter lambda

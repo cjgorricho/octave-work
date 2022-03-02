@@ -16,7 +16,7 @@ res = zeros(size(X, 1), 1);
 p = zeros(size(X, 1), 1);
 
 % Add ones to the X data matrix
-X = [ones(m, 1) X];
+% X = [ones(m, 1) X];
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: Complete the following code to make predictions using
@@ -32,8 +32,7 @@ X = [ones(m, 1) X];
 %       
 
 
-[res p] = max(X * all_theta', [], 2);
-
+[res p] = max(X * all_theta, [], 2);
 
 
 % =========================================================================
