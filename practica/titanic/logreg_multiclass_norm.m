@@ -22,7 +22,7 @@ clear; close all; clc
 
 % Load dependencies and modules
 
-pkg load io;
+% pkg load io;
 
 %% Setup the parameters you will use for this part of the exercise
 num_labels = 6;           % 6 labels corresponding to combinations of Class and Sex
