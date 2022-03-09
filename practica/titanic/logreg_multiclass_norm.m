@@ -40,19 +40,19 @@ num_labels = 6;           % 6 labels corresponding to combinations of Class and 
 %  col  9 - 20: y vectors for each class in one-vs-all algorythm
 
 % Load data - combination of Class, Sex, SibSp, Parch, Embarked
-data = load('train_val.txt'); % Read file and worksheet
+data = csvread('train.csv'); % Read file and worksheet
 X = data(3:end, [2, 3, 5, 6, 7]); % Load data according to dictionary above except 
 y = data(3:end, 9:20);
 
 % Load data - Passenger Age and add npols polinomials. If commented (%) not used
-X_age = data(3:end, 4);
-npols = 2;
-X_age_poly = polyFeatures(X_age, npols);
+%X_age = data(3:end, 4);
+%npols = 2;
+%X_age_poly = polyFeatures(X_age, npols);
 
 % Integreate data
 m = size(X,1);
-X = [ones(m,1), X, X_age_poly]; % Use only if age is a feature
-% X = [ones(m,1), X]; % Use only if age is NOT a feature
+%X = [ones(m,1), X, X_age_poly]; % Use only if age is a feature
+X = [ones(m,1), X]; % Use only if age is NOT a feature
 
 % Create random training and validation sets
 rand_ind = randperm(m);

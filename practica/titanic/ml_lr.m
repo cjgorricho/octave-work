@@ -33,7 +33,7 @@ clear; close all; clc
 %  Col 8: Boarding Port (C: 1, S: 2, Q:3)
 
 % Load data - Passenger Class (Col3), Sex (Col4), or both
-data = load('train_val.csv');
+data = csvread('train.csv');
 X = data(:, [3, 4, 6, 7]); y = data(:, 2);
 
 % Load data - Passenger Age and add npols polinomials. If commented (%) not used
