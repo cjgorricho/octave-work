@@ -19,6 +19,10 @@ end
 % Plot the SVM boundary
 hold on
 contour(X1, X2, vals, [0.5 0.5], 'b');
+xlabel('Microchip Test 1')
+ylabel('Microchip Test 2')
+% Specified in plot order
+legend('y = 1', 'y = 0', 'Non-linear boundary')
 hold off;
 
 end

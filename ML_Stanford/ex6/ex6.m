@@ -50,9 +50,15 @@ fprintf('\nTraining Linear SVM ...\n')
 
 % You should try to change the C value below and see how the decision
 % boundary varies (e.g., try C = 1000)
-C = 1;
-model = svmTrain(X, y, C, @linearKernel, 1e-3, 20);
-visualizeBoundaryLinear(X, y, model);
+C_vec = [1, 33, 67, 100];
+figure;
+
+for i = 1:length(C_vec)
+  C = C_vec(i);
+  model = svmTrain(X, y, C, @linearKernel, 1e-2, 10);  
+  visualizeBoundaryLinear(X, y, model, 2, 2, C, i);
+  
+end
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
@@ -99,6 +105,33 @@ fprintf('\nTraining SVM with RBF Kernel (this may take 1 to 2 minutes) ...\n');
 % You will have X, y in your environment
 load('ex6data2.mat');
 
+% SVM Parameters
+C = 1; sigma = 0.1;
+
+% We set the tolerance and max_passes lower here so that the code will run
+% faster. However, in practice, you will want to run the training to
+% convergence.
+model= svmTrain(X, y, C, @(x1, x2) gaussianKernel(x1, x2, sigma)); 
+visualizeBoundary(X, y, model);
+
+fprintf('Program paused. Press enter to continue.\n');
+pause;
+
+
+%% ========== Part 5.1: Training SVM with RBF Kernel (Dataset ex2_reg) ==========
+%  After you have implemented the kernel, we can now use it to train the 
+%  SVM classifier.
+%  This section is implemented with the dataset for ex2_reg 
+% 
+fprintf('\nTraining SVM with RBF Kernel data set of ex2(this may take 1 to 2 minutes) ...\n');
+
+%% Load Data
+%  The first two columns contains the X values and the third column
+%  contains the label (y).
+
+data = load('ex2data2.txt');
+X = data(:, [1, 2]); y = data(:, 3);
+figure;
 % SVM Parameters
 C = 1; sigma = 0.1;
 
