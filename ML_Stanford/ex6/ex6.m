@@ -187,3 +187,11 @@ visualizeBoundary(X, y, model);
 fprintf('Program paused. Press enter to continue.\n');
 pause;
 
+% Train the SVM - SENSITIVITY
+model= svmTrain(X, y, 1, @(x1, x2) gaussianKernel(x1, x2, 0.1));
+visualizeBoundary(X, y, model);
+
+fprintf('Program paused. Press enter to continue.\n');
+pause;
+
+

@@ -37,13 +37,16 @@ for i = 1:length(C_vec)
       accuracy = curr_acc;
       C = C_vec(i);
       sigma = sigma_vec(j);
-      fprintf('New C = %f - New sigma = %f - Accuracy = %f\n', C, sigma, accuracy);
+      fprintf('New C = %f - New sigma = %f - Pred error = %f\n', C, sigma, accuracy);
+      figure;
+      visualizeBoundary(X, y, model);
+
     endif
     
   endfor
 endfor
 
-fprintf('Final C = %f - Final sigma = %f - Accuracy = %f\n', C, sigma, accuracy);
+fprintf('Final C = %f - Final sigma = %f - Pred error = %f\n', C, sigma, accuracy);
 
 % =========================================================================
 
