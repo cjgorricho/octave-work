@@ -23,11 +23,27 @@ sigma = 0.3;
 %        mean(double(predictions ~= yval))
 %
 
+C_vec = [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30];
+sigma_vec = [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30];
+accuracy = 100;
 
+for i = 1:length(C_vec)
+  for j = 1:length(sigma_vec)
+    
+    model = svmTrain(X, y, C_vec(i), @(x1, x2) gaussianKernel(x1, x2, sigma_vec(j)));
+    pred = svmPredict(model, Xval);
+    curr_acc = mean(double(pred ~= yval))*100;
+    if (curr_acc < accuracy)
+      accuracy = curr_acc;
+      C = C_vec(i);
+      sigma = sigma_vec(j);
+      fprintf('New C = %f - New sigma = %f\n', C, sigma);
+    endif
+    
+  endfor
+endfor
 
-
-
-
+fprintf('Final C = %f - Final sigma = %f\n', C, sigma);
 
 % =========================================================================
 
