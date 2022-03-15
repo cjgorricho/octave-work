@@ -37,13 +37,13 @@ for i = 1:length(C_vec)
       accuracy = curr_acc;
       C = C_vec(i);
       sigma = sigma_vec(j);
-      fprintf('New C = %f - New sigma = %f\n', C, sigma);
+      fprintf('New C = %f - New sigma = %f - Accuracy = %f\n', C, sigma, accuracy);
     endif
     
   endfor
 endfor
 
-fprintf('Final C = %f - Final sigma = %f\n', C, sigma);
+fprintf('Final C = %f - Final sigma = %f - Accuracy = %f\n', C, sigma, accuracy);
 
 % =========================================================================
 
