@@ -173,6 +173,9 @@ pause;
 %  different values of C and sigma here.
 % 
 
+% Reset screen, graphs windows, variables
+clear ; close all; clc
+
 % Load from ex6data3: 
 % You will have X, y in your environment
 load('ex6data3.mat');

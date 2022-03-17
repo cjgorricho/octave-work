@@ -4,7 +4,7 @@ function visualizeBoundary(X, y, model, varargin)
 %   boundary learned by the SVM and overlays the data on it
 
 % Plot the training data on top of the boundary
-plotData(X, y)
+plotData(X, y, 4)
 
 % Make classification predictions over a grid of values
 x1plot = linspace(min(X(:,1)), max(X(:,1)), 100)';

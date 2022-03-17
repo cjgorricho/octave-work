@@ -26,6 +26,7 @@ sigma = 0.3;
 C_vec = [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30];
 sigma_vec = [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30];
 accuracy = 100;
+cont = 0;
 
 for i = 1:length(C_vec)
   for j = 1:length(sigma_vec)
@@ -34,19 +35,23 @@ for i = 1:length(C_vec)
     pred = svmPredict(model, Xval);
     curr_acc = mean(double(pred ~= yval))*100;
     if (curr_acc < accuracy)
+      cont = cont + 1;
       accuracy = curr_acc;
       C = C_vec(i);
       sigma = sigma_vec(j);
-      fprintf('New C = %f - New sigma = %f - Pred error = %f\n', C, sigma, accuracy);
-      figure;
-      visualizeBoundary(X, y, model);
+      fprintf('New C = %.3f - New sigma = %.3f - Pred error = %.3f\n', C, sigma, accuracy);
+      subplot(2,3, cont) 
+        visualizeBoundary(X, y, model);
+        hold on;
+        title(sprintf('C = %.2f\nsigma = %.2f\nPred Error = %.1f%%', C, sigma, accuracy));
+        hold off;
 
     endif
     
   endfor
 endfor
 
-fprintf('Final C = %f - Final sigma = %f - Pred error = %f\n', C, sigma, accuracy);
+fprintf('Final C = %.3f - Final sigma = %.3f - Pred error = %.3f\n', C, sigma, accuracy);
 
 % =========================================================================
 
