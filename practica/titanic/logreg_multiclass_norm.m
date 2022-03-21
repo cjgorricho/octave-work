@@ -41,8 +41,8 @@ num_labels = 6;           % 6 labels corresponding to combinations of Class and 
 
 % Load data - combination of Class, Sex, SibSp, Parch, Embarked
 data = csvread('train.csv'); % Read file and worksheet
-X = data(3:end, [2, 3, 5, 6, 7]); % Load data according to dictionary above except 
-y = data(3:end, 9:20);
+X = data(3:end, [3, 4, 6, 7]); % Load data according to dictionary above except 
+y = data(3:end, 10:21);
 
 % Load data - Passenger Age and add npols polinomials. If commented (%) not used
 %X_age = data(3:end, 4);
