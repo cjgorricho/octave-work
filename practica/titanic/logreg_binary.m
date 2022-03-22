@@ -21,37 +21,41 @@
 clear; close all; clc
 
 %% Load Data
-%  The original file is transformed to obtain the following file structure
-%  Col 1: passenger consecutive ID, which is not used in the model
-%  Col 2: label (y)
-%  Col 3: Passenger Class (PClass: 1, 2, 3)
-%  Col 4: Sex (male: 1, female: 2)
-%  Col 5: Age; where data was missing I put the average for the class, sex and 
-%         survived/not-survived. This should reduce the drag
-%  Col 6: SibSp - # of siblings or spouse 
-%  Col 7: Parch - # of parents or children
-%  Col 8: Boarding Port (C: 1, S: 2, Q:3)
+%  xlsread will be used to load data directly from Excel
+%  Col  1: Passenger ID (not used)
+%  Col  2: Survived (label y)
+%  Col  3: Passenger Class (PClass: 1, 2, 3)
+%  Col  4: Sex_num (male: 1, female: 2) 
+%  Col  5: Age_adj; for training purposes average was calculated by survived/class/sex
+%  Col  6: SibSp - # of siblings or spouse 
+%  Col  7: Parch - # of parents or children
+%  Col  8: Embarked_num (C:1, S:2, Q:3)
+%  Col  9: Class_sex; combination of Class and Sex. These are the classes (not used)
+%  Col  10 - 21: y vectors for each class in one-vs-all algorythm (not used)
 
 % Load data - Passenger Class (Col3), Sex (Col4), or both
 data = csvread('train.csv');
-X = data(:, [3, 4, 6, 7]); y = data(:, 2);
+X = data(3:end, [3, 4, 6, 7, 8]); 
+y = data(3:end, 2);
 
 % Load data - Passenger Age and add npols polinomials. If commented (%) not used
-%X_age = data(:, 5);
-%npols = 2;
-%X_age_poly = polyFeatures(X_age, npols);
+X_age = data(3:end, 5);
+npols = 2;
+X_age_poly = polyFeatures(X_age, npols);
 
 % Integreate data
 m = size(X,1);
-%X = [ones(m,1), X, X_age_poly]; % Use only if age is a feature
-X = [ones(m,1), X]; % Use only if age is NOT a feature
+X = [ones(m,1), X, X_age_poly]; % Use only if age is a feature
+%X = [ones(m,1), X]; % Use only if age is NOT a feature
 
 % Create random training and validation sets
 rand_ind = randperm(m);
 train_perc = 0.7;
 train_ind = round(train_perc * m);
-X_train = X(rand_ind(1:train_ind), :); y_train = y(rand_ind(1:train_ind));
-X_val = X(rand_ind(train_ind+1:end), :); y_val = y(rand_ind(train_ind+1:end));
+X_train = X(rand_ind(1:train_ind), :); 
+y_train = y(rand_ind(1:train_ind));
+X_val = X(rand_ind(train_ind+1:end), :); 
+y_val = y(rand_ind(train_ind+1:end));
 
 % Initialize fitting parameters
 %initial_theta = rand(size(X, 2), 1); 

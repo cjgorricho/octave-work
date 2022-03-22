@@ -30,29 +30,30 @@ num_labels = 6;           % 6 labels corresponding to combinations of Class and 
 %% Load Data
 %  xlsread will be used to load data directly from Excel
 %  Col  1: Passenger ID (not used)
-%  Col  2: Passenger Class (PClass: 1, 2, 3)
-%  Col  3: Sex_num (male: 1, female: 2) 
-%  Col  4: Age_adj; for training purposes average was calculated by survived/class/sex
-%  Col  5: SibSp - # of siblings or spouse 
-%  Col  6: Parch - # of parents or children
-%  Col  7: Embarked_num (C:1, S:2, Q:3)
-%  Col  8: Class_sex; combination of Class and Sex. These are the classes
-%  col  9 - 20: y vectors for each class in one-vs-all algorythm
+%  Col  2: Survived (label y - not used)
+%  Col  3: Passenger Class (PClass: 1, 2, 3)
+%  Col  4: Sex_num (male: 1, female: 2) 
+%  Col  5: Age_adj; for training purposes average was calculated by survived/class/sex
+%  Col  6: SibSp - # of siblings or spouse 
+%  Col  7: Parch - # of parents or children
+%  Col  8: Embarked_num (C:1, S:2, Q:3)
+%  Col  9: Class_sex; combination of Class and Sex. These are the classes
+%  Col  10 - 21: y vectors for each class in one-vs-all algorythm
 
 % Load data - combination of Class, Sex, SibSp, Parch, Embarked
 data = csvread('train.csv'); % Read file and worksheet
-X = data(3:end, [3, 4, 6, 7]); % Load data according to dictionary above except 
+X = data(3:end, [3, 4, 6, 7, 8]); % Load data according to dictionary above except 
 y = data(3:end, 10:21);
 
 % Load data - Passenger Age and add npols polinomials. If commented (%) not used
-%X_age = data(3:end, 4);
-%npols = 2;
-%X_age_poly = polyFeatures(X_age, npols);
+X_age = data(3:end, 4);
+npols = 2;
+X_age_poly = polyFeatures(X_age, npols);
 
 % Integreate data
 m = size(X,1);
-%X = [ones(m,1), X, X_age_poly]; % Use only if age is a feature
-X = [ones(m,1), X]; % Use only if age is NOT a feature
+X = [ones(m,1), X, X_age_poly]; % Use only if age is a feature
+%X = [ones(m,1), X]; % Use only if age is NOT a feature
 
 % Create random training and validation sets
 rand_ind = randperm(m);

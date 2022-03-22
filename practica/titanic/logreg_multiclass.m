@@ -21,27 +21,20 @@
 clear; close all; clc
 
 %% Setup the parameters you will use for this part of the exercise
-num_labels = 6;           % 6 labels corresponding to combinations of Class and Sex
+num_labels = 12;           % 6 labels corresponding to combinations of Class and Sex
 
 %% Load Data
 %  xlsread will be used to load data directly from Excel
 %  Col  1: Passenger ID (not used)
-%  Col  2: original label y (survived: 1, did not survive:0)
+%  Col  2: Survived (label y - not used)
 %  Col  3: Passenger Class (PClass: 1, 2, 3)
-%  Col  4: Name (not used)
-%  Col  5: Sex_txt (male, female)
-%  Col  6: Sex_num (male: 1, female: 2) 
-%  Col  7: Age (not used because it has missing values)
-%  Col  8: Age_adj; for training purposes average was calculated by survived/class/sex
-%  Col  9: SibSp - # of siblings or spouse 
-%  Col 10: Parch - # of parents or children
-%  Col 11: Ticket (not used)
-%  Col 12: Fare (not used)
-%  Col 13: Cabin (not used)
-%  Col 14: Embarked_txt (C, S, Q)
-%  Col 15: Embarked_num (C:1, S: 2, Q:3)
-%  Col 16: Class_sex; combination of Class and Sex. These are the classes
-%  col 17 - 22: y vectors for each class in one-vs-all algorythm
+%  Col  4: Sex_num (male: 1, female: 2) 
+%  Col  5: Age_adj; for training purposes average was calculated by survived/class/sex
+%  Col  6: SibSp - # of siblings or spouse 
+%  Col  7: Parch - # of parents or children
+%  Col  8: Embarked_num (C:1, S:2, Q:3)
+%  Col  9: Class_sex; combination of Class and Sex. These are the classes
+%  Col  10 - 21: y vectors for each class in one-vs-all algorythm
 
 % Load data - combination of Class, Sex, SibSp, Parch, Embarked
 data = csvread('train.csv'); % Read file and worksheet
