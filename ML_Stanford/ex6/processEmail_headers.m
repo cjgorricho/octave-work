@@ -1,4 +1,4 @@
-function word_indices = processEmail_headers(email_contents)
+function [word_indices, vocabList] = processEmail_headers(email_contents)
 %PROCESSEMAIL preprocesses a the body of an email and
 %returns a list of word_indices 
 %   word_indices = PROCESSEMAIL(email_contents) preprocesses 
@@ -7,10 +7,12 @@ function word_indices = processEmail_headers(email_contents)
 %
 
 % Load Vocabulary
-vocabList = getVocabList();
+% vocabList = getVocabList();
 
-% Init return value
+% Init values
 word_indices = [];
+vocabList = {"",0};
+ind = 0;
 
 % ========================== Preprocess Email ===========================
 
@@ -18,8 +20,8 @@ word_indices = [];
 % Uncomment the following lines if you are working with raw emails with the
 % full headers
 
-hdrstart = strfind(email_contents, ([char(10) char(10)]));
-email_contents = email_contents(hdrstart(1):end);
+bodystart = find(diff(strfind(email_contents, char(10))')==2);
+email_contents = email_contents(bodystart(1):end);
 
 % Lower case
 email_contents = lower(email_contents);
@@ -49,7 +51,7 @@ email_contents = regexprep(email_contents, '[$]+', 'dollar');
 % ========================== Tokenize Email ===========================
 
 % Output the email to screen as well
-fprintf('\n==== Processed Email ====\n\n');
+% fprintf('\n==== Processed Email ====\n\n');
 
 % Process file
 l = 0;
@@ -75,33 +77,6 @@ while ~isempty(email_contents)
        continue;
     end
 
-    % Look up the word in the dictionary and add to word_indices if
-    % found
-    % ====================== YOUR CODE HERE ======================
-    % Instructions: Fill in this function to add the index of str to
-    %               word_indices if it is in the vocabulary. At this point
-    %               of the code, you have a stemmed word from the email in
-    %               the variable str. You should look up str in the
-    %               vocabulary list (vocabList). If a match exists, you
-    %               should add the index of the word to the word_indices
-    %               vector. Concretely, if str = 'action', then you should
-    %               look up the vocabulary list to find where in vocabList
-    %               'action' appears. For example, if vocabList{18} =
-    %               'action', then, you should add 18 to the word_indices 
-    %               vector (e.g., word_indices = [word_indices ; 18]; ).
-    % 
-    % Note: vocabList{idx} returns a the word with index idx in the
-    %       vocabulary list.
-    % 
-    % Note: You can use strcmp(str1, str2) to compare two strings (str1 and
-    %       str2). It will return 1 only if the two strings are equivalent.
-    %
-
-    word_indices = [word_indices ; find(strcmp(vocabList, str))];
-    
-    % =============================================================
-
-
     % Print to screen, ensuring that the output lines are not too long
     if (l + length(str) + 1) > 78
         fprintf('\n');
@@ -109,6 +84,18 @@ while ~isempty(email_contents)
     end
     fprintf('%s ', str);
     l = l + length(str) + 1;
+    
+    comp = max(strcmp(vocabList, str));
+    if (!comp)
+      ind = ind + 1;
+      vocabList{ind, 1} = str;
+      vocabList{ind, 2} = 0;
+      vocabList{ind, 2} = vocabList{ind, 2} + 1;
+    else
+      ind_word = find(strcmp(vocabList, str));
+      vocabList{ind_word, 2} = vocabList{ind_word, 2} + 1;
+    endif
+    
 
 end
 

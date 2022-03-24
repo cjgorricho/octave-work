@@ -30,15 +30,32 @@ email_struct = setfield (email_struct, {1}, 'spam_2', {1}, 'spam', []);
 
 %%  ======Loop over email_struct to populate X and y vectors===
 
-% Initialize vectors and matrices
-
-vocabList = [];
-vocabFreq = [];
-X = [];
-y = [];
+cont = 0;
 
 for [val, key] = email_struct
-  key
-  val
+%    key
+%    val
+  
+    for i = 1:length(val)
+    
+        if val(i).isdir == 1
+              continue
+        elseif strcmp(val(i).name, 'cmds')
+              continue
+        endif
+        
+        cont = cont + 1;
+        
+        email_file =  [val(i).folder, '\', val(i).name];
+        
+        % Extract Features
+        fprintf('\nProcessing email file #%d\n%s\n\n', cont, email_file);
+        
+        file_contents = readFile(email_file);
+        [word_indices, vocabList]  = processEmail_headers(file_contents);
+    
+    endfor
+  
+  
 endfor
 
