@@ -78,12 +78,12 @@ while ~isempty(email_contents)
     end
 
     % Print to screen, ensuring that the output lines are not too long
-    if (l + length(str) + 1) > 78
-        fprintf('\n');
-        l = 0;
-    end
-    fprintf('%s ', str);
-    l = l + length(str) + 1;
+    %if (l + length(str) + 1) > 78
+    %    fprintf('\n');
+    %    l = 0;
+    %end
+    %fprintf('%s ', str);
+    %l = l + length(str) + 1;
     
     comp = max(strcmp(vocabList, str));
     if (!comp)
@@ -100,6 +100,6 @@ while ~isempty(email_contents)
 end
 
 % Print footer
-fprintf('\n\n=========================\n');
+%fprintf('\n\n=========================\n');
 
 end
