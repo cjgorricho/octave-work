@@ -20,7 +20,7 @@ ind = 0;
 % Uncomment the following lines if you are working with raw emails with the
 % full headers
 
-bodystart = find(diff(strfind(email_contents, char(10))')==2);
+bodystart = find(diff(strfind(email_contents, char(10))')<=2);
 email_contents = email_contents(bodystart(1):end);
 
 % Lower case
@@ -85,7 +85,7 @@ while ~isempty(email_contents)
     %fprintf('%s ', str);
     %l = l + length(str) + 1;
     
-    comp = max(strcmp(vocabList, str));
+    comp = strcmp(vocabList, str);
     if (!comp)
       ind = ind + 1;
       vocabList{ind, 1} = str;
@@ -98,6 +98,9 @@ while ~isempty(email_contents)
     
 
 end
+
+
+
 
 % Print footer
 %fprintf('\n\n=========================\n');

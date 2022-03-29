@@ -8,6 +8,7 @@
 
 %  Initialize workspace
 clear ; close all; home;
+pkg load io;
 
 %  Assign the content of all dirs in 'emails' folders to a strcut variable
 
@@ -31,14 +32,18 @@ email_struct = setfield (email_struct, {1}, 'spam_2', {1}, 'spam', []);
 %%  ======Loop over email_struct to populate X and y vectors===
 
 cont = 0;
+acum = 0;
+vocabFile = 'vocabList.csv';
 
 for [val, key] = email_struct
 %    key
 %    val
   
+    acum = acum + length(val);
+    
     for i = 1:length(val)
     
-        if val(i).isdir == 1
+        if (val(i).isdir == 1)
               continue
         elseif strcmp(val(i).name, 'cmds')
               continue
@@ -49,13 +54,18 @@ for [val, key] = email_struct
         email_file =  [val(i).folder, '\', val(i).name];
         
         % Extract Features
-        fprintf('\nProcessing email file #%d\n%s\n\n', cont, email_file);
-        
+        fprintf('\nProcessing email file #%d of %d\n%s\n\n', cont, acum, email_file);
         file_contents = readFile(email_file);
-        [word_indices, vocabList]  = processEmail_headers(file_contents);
+        [word_indices, vocabList] = processEmail_headers(file_contents);
+        
+        if (mod(cont,100)==0)
+            createVocabList(vocabFile, vocabList);
+        endif
     
     endfor
-  
-  
+ 
+    createVocabList(vocabFile, vocabList);
+    
+   
 endfor
 
