@@ -1,3 +1,6 @@
+%%% MODIFICADO POR CARLOS A. GORRICHO FEB 10 2022
+
+
 %% Machine Learning Online Class
 %  Exercise 5 | Regularized Linear Regression and Bias-Variance
 %
@@ -35,16 +38,15 @@ load ('ex5data1.mat');
 m = size(X, 1);
 
 % Plot training data
-Xtrain = [X; NaN(size(Xval,1)-size(X,1),1)];
-ytrain = [y; NaN(size(yval,1)-size(y,1),1)];
+Xtrain = [X; NaN(size(Xtest)-size(X),1)];
+ytrain = [y; NaN(size(ytest)-size(y),1)];
 Xplot = [Xtrain Xval Xtest];
 yplot = [ytrain yval ytest];
-
 
 plot(Xplot, yplot, 'x', 'MarkerSize', 5, 'LineWidth', 1);
 xlabel('Change in water level (x)');
 ylabel('Water flowing out of the dam (y)');
-legend('Train', 'Cross Validation', 'Test', 'fontsize', 12,'location', 'northwest');
+legend('Train', 'Cross Validation', 'Test', 'location', 'NorthWest', 'fontsize', 12);
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
@@ -93,13 +95,15 @@ lambda = 0;
 [theta] = trainLinearReg([ones(m, 1) X], y, lambda);
 
 %  Plot fit over the data
+figure;
 plot(X, y, 'rx', 'MarkerSize', 5, 'LineWidth', 1);
 xlabel('Change in water level (x)');
 ylabel('Water flowing out of the dam (y)');
 hold on;
 plot(X, [ones(m, 1) X]*theta, '-', 'LineWidth', 1)
 hold off;
-legend('Train', 'Prediction', 'fontsize', 12,'location', 'northwest');
+legend('Train', 'Prediction', 'location', 'NorthWest', 'fontsize', 12);
+
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
@@ -114,19 +118,20 @@ pause;
 
 lambda = 0;
 [error_train, error_val, error_test] = ...
-    learningCurve_cag([ones(m, 1) X], y, ...  % Col of 1 already added to X
-                  [ones(size(Xval, 1), 1) Xval], yval, ...   % Col of 1 already added to Xval
+    learningCurve_cag([ones(m, 1) X], y, ...
+                  [ones(size(Xval, 1), 1) Xval], yval, ...
                   [ones(size(Xtest, 1), 1) Xtest], ytest, ...
                   lambda);
 
+figure;
 plot(1:m, error_train, 1:m, error_val, 1:m, error_test);
 title('Learning curve for linear regression')
-legend('Train', 'Cross Validation', 'Test')
+legend('Train', 'Cross Validation', 'Test', 'fontsize', 12)
 xlabel('Number of training examples')
 ylabel('Error')
 axis([0 13 0 150])
 
-fprintf('# Training Examples\tTrain Error\tCross Val Error\t\tTest Error\n');
+fprintf('# Training Examples\tTrain Error\tCross Val Error\t\tCross Val Error\n');
 for i = 1:m
     fprintf('  \t%d\t\t%f\t%f\t\t%f\n', i, error_train(i), error_val(i), error_test(i));
 end
@@ -165,7 +170,6 @@ fprintf('\nProgram paused. Press enter to continue.\n');
 pause;
 
 
-
 %% =========== Part 7: Learning Curve for Polynomial Regression =============
 %  Now, you will get to experiment with polynomial regression with multiple
 %  values of lambda. The code below runs polynomial regression with 
@@ -173,32 +177,32 @@ pause;
 %  lambda to see how the fit and learning curve change.
 %
 
-lambda = 0;
+lambda = 3.25;
 [theta] = trainLinearReg(X_poly, y, lambda);
 
 % Plot training data and fit
 figure(1);
-plot(X, y, 'rx', 'MarkerSize', 10, 'LineWidth', 1.5);
+plot(X, y, 'rx', 'MarkerSize', 5, 'LineWidth', 1);
 plotFit(min(X), max(X), mu, sigma, theta, p);
 xlabel('Change in water level (x)');
 ylabel('Water flowing out of the dam (y)');
-title (sprintf('Polynomial Regression Fit (lambda = %f)', lambda));
+title (sprintf('Polynomial Regression Fit (lambda = %.3f)', lambda));
 
 figure(2);
-[error_train, error_val] = ...
-    learningCurve(X_poly, y, X_poly_val, yval, lambda);
-plot(1:m, error_train, 1:m, error_val);
+[error_train, error_val, error_test] = ...
+    learningCurve_cag(X_poly, y, X_poly_val, yval, X_poly_test, ytest,lambda);
+plot(1:m, error_train, 1:m, error_val, 1:m, error_test);
 
-title(sprintf('Polynomial Regression Learning Curve (lambda = %f)', lambda));
+title(sprintf('Polynomial Regression Learning Curve (lambda = %.3f)', lambda));
 xlabel('Number of training examples')
 ylabel('Error')
 axis([0 13 0 100])
-legend('Train', 'Cross Validation')
+legend('Train', 'Cross Validation', 'Test', 'fontsize', 12)
 
 fprintf('Polynomial Regression (lambda = %f)\n\n', lambda);
-fprintf('# Training Examples\tTrain Error\tCross Validation Error\n');
+fprintf('# Training Examples\tTrain Error\tCross Val Error\t\tTest Error\n');
 for i = 1:m
-    fprintf('  \t%d\t\t%f\t%f\n', i, error_train(i), error_val(i));
+    fprintf('  \t%d\t\t%f\t%f\t\t%f\n', i, error_train(i), error_val(i), error_test(i));
 end
 
 fprintf('Program paused. Press enter to continue.\n');
@@ -210,20 +214,75 @@ pause;
 %  "best" lambda value.
 %
 
-[lambda_vec, error_train, error_val] = ...
-    validationCurve(X_poly, y, X_poly_val, yval);
+[lambda_vec, error_train, error_val, total_error, error_test] = ...
+    validationCurve_cag(X_poly, y, X_poly_val, yval, X_poly_test, ytest);
 
 close all;
-plot(lambda_vec, error_train, lambda_vec, error_val);
-legend('Train', 'Cross Validation');
+plot(lambda_vec, error_train, lambda_vec, error_val, lambda_vec, error_test, lambda_vec, total_error);
+legend('Train', 'Cross Validation', 'Test', 'Total Train + Val', 'fontsize', 12);
 xlabel('lambda');
 ylabel('Error');
 
-fprintf('lambda\t\tTrain Error\tValidation Error\n');
+fprintf('lambda\t\tTrain Error\tCross Val Error\t\tTest Error\n');
 for i = 1:length(lambda_vec)
-	fprintf(' %f\t%f\t%f\n', ...
-            lambda_vec(i), error_train(i), error_val(i));
+	fprintf(' %f\t%f\t%f\t\t%f\n', ...
+            lambda_vec(i), error_train(i), error_val(i), error_test(i));
 end
+
+fprintf('Program paused. Press enter to continue.\n');
+pause;
+
+
+%% =========== Part 9: Plotting Learning Curves with randomly selected examples =============
+%  Per 3.5 Optional exercise in ex5.pdf. Select i random examples from Training and Validation sets
+%  Learn theta for each set. Calculate errors for Train and Validations sets 
+%  Repeat 50 times and average error 
+%
+
+close all;
+
+% Selected values of lambda 
+%lambda_vec = [0 0.001 0.003 0.01 0.03 0.1 0.3 1 3 10]';
+lambda_vec = [2 2.2 2.4 2.6 2.8 3.0 3.2 3.4 3.6 3.8]';
+
+iterations = 25;
+error_train_rand = zeros(size(X_poly, 1), iterations);
+error_val_rand = zeros(size(X_poly, 1), iterations);
+error_test_rand = zeros(size(X_poly, 1), iterations);
+plot_rows = 2;
+plot_cols = length(lambda_vec) / plot_rows;
+
+
+for j = 1:length(lambda_vec)
+
+    lambda = lambda_vec(j);
+    fprintf('\nLambda: %.3f\n', lambda);
+    
+    for i = 1:iterations
+      
+      fprintf('\nIteration: %d\n', i);  
+      [error_train_rand(:, i) error_val_rand(:, i) error_test_rand(:, i)] = ...
+          learningCurve_cag_rand(X_poly, y, ...
+          X_poly_val, yval, ... 
+          X_poly_test, ytest,lambda);
+      
+    end
+
+    error_train = mean(error_train_rand,2);
+    error_val = mean(error_val_rand,2);
+    error_test = mean(error_test_rand,2);
+    error_plot = [error_train error_val error_test];
+    
+    subplot(plot_rows, plot_cols, j);
+      plot(1:m, error_plot);
+      title(sprintf('Polynomial Regression\nLearning Curve\n(lambda = %.3f)', lambda));
+      xlabel('Number of training examples');
+      ylabel('Error');
+      legend('Train', 'Cross Validation', 'Test', 'location', 'northeast');
+      axis([0 13 0 150]);
+
+end
+
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
